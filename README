@@ -1,0 +1,6 @@
+The files in this directory run a monte carlo simulation of laser fluence in a flat surfaced bit of tissue. 
+The code is meant to be run in matlab and can be executed by running scatter_simulation.m.
+The needed input to this function is the number of photons to be run, the beam profile type, and the radius of the beam.
+It is programmed to output the number of photons reflected, absorbed, and transmitted, as well as three r-z grids representing the number of photons absorbed in grid section, the fluence of the grid section, and the heating  in the grid section.
+In the file scatter_simulation.m the index of reflection, mu_a, mu_s, g, the power, and the depth of tissue need to be specified.
+For more description see scatter_simulation.m
