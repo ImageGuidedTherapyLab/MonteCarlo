@@ -8,3 +8,11 @@ For more description see scatter_simulation.m
 The file ascii_write.m is meant to take the output grid and write it into the appropriate ascii format for the dddas code.
 
 multi_run.m is a file meant to allow the user to run the code multiple times with multiple values of mu_a mu_s and g via the appropriate scatter_simulations, scatter_simulation_mua.m scatter_simulation_mus.m and scatter_simulation_g.
+
+
+createavsfield.m is a function to create a avs field file of the monted carlo
+field type:
+
+avs -cli "script -play field_vis.cli"
+
+to open avs network

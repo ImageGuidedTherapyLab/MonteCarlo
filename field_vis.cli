@@ -1,0 +1,7 @@
+net_clear
+present "Network Editor"
+#net_read opens the network file
+net_read field_vis.net
+script -close
+parm_set "generate axes.user.8":Regenerate 1
+
