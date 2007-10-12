@@ -1,0 +1,158 @@
+#!/usr/bin/avs -network
+version 5.5 (50.86 i686 ogl)
+module "read field.user.0" -xy 128,32 -ex $Path/avs_library/mongo
+module "field to mesh.user.1" -xy 448,183 -ex $Path/avs_library/mongo
+module "generate colormap.user.2" -xy 108,88
+module "color legend.user.3" -xy 268,168 -ex $Path/avs_library/mongo
+module "geometry viewer.user.4" -xy 518,283
+port_connect "read field.user.0":0 "field to mesh.user.1":0
+port_connect "field to mesh.user.1":0 "geometry viewer.user.4":0
+port_connect "generate colormap.user.2":0 "color legend.user.3":0
+port_connect "generate colormap.user.2":0 "field to mesh.user.1":1
+port_connect "color legend.user.3":0 "geometry viewer.user.4":0
+parm_set "read field.user.0":"Read Field Browser" /ices/fuentes/DDDAS/3DhpA_work/montecarlo/./mc.fld
+parm_set "field to mesh.user.1":"Z scale" 15.80240631
+geom_set_scene -scene "geometry viewer.user.4"
+geom_set_camera_name "Camera 1"
+geom_resize_camera -view "Camera 1" 512 512
+#
+# State for view: Camera 1
+#
+geom_set_position -view "Camera 1" 0 0 -12
+geom_set_view_modes -depth_cue 0 -view "Camera 1"
+geom_set_view_modes -polygonal_spheres 0 -view "Camera 1"
+geom_set_view_modes -stereo 0 -view "Camera 1"
+geom_set_view_modes -head_tracking 1 -view "Camera 1"
+geom_set_view_modes -z_buffer 1 -view "Camera 1"
+geom_set_camera_params -view "Camera 1" -front -88 -back 112
+geom_set_depth_cue_params "Camera 1" -scale 0.1
+#
+# Light state
+#
+geom_set_light -light 1 -type directional -state 1
+geom_set_light -type ambient -state 1
+#
+# State for object: top
+#
+geom_set_cur_cli_obj top
+geom_set_matrix   -mat \
+                  0.0141807    0.0093045    -0.00976206    0 \
+                    -0.0134854    0.0099111    -0.0101428    0 \
+                    0.000121541    0.014077    0.0135937    0 \
+                    0    0    0    1 
+geom_set_position   -1.17188 -4.49219 0
+#
+# State for object: "color legend"
+#
+geom_set_cur_cli_obj -push
+geom_set_name_context "color legend.user.3"
+geom_create_obj "color legend" -mod "color legend.user.3"
+geom_set_trans_mode locked
+geom_set_render_mode no_light
+geom_set_name_context
+#
+# State for object: "color boundary"
+#
+geom_set_cur_cli_obj -push
+geom_set_name_context "color legend.user.3"
+geom_create_obj "color boundary" -mod "color legend.user.3"
+geom_set_select_mode parent
+geom_set_name_context
+geom_set_cur_cli_obj -pop
+#
+# State for object: "legend labels"
+#
+geom_set_cur_cli_obj -push
+geom_set_name_context "color legend.user.3"
+geom_create_obj "legend labels" -mod "color legend.user.3"
+geom_set_select_mode parent
+geom_set_name_context
+geom_set_cur_cli_obj -pop
+#
+# State for object: "tick marks"
+#
+geom_set_cur_cli_obj -push
+geom_set_name_context "color legend.user.3"
+geom_create_obj "tick marks" -mod "color legend.user.3"
+geom_set_select_mode parent
+geom_set_name_context
+geom_set_cur_cli_obj -pop
+geom_set_cur_cli_obj -pop
+#
+# State for object: "field mesh"
+#
+geom_set_cur_cli_obj -push
+geom_set_name_context "field to mesh.user.1"
+geom_create_obj "field mesh" -mod "field to mesh.user.1"
+geom_set_name_context
+geom_set_cur_cli_obj -pop
+shell "ui" shell
+ panel Application -w app_panel -p ui -xy 0,0 -wh 260,972
+  panel "Top Level Stack" -w master_stack -p Application -xy 2,100 -wh 256,696
+   panel "read field.user.0" -w panel -p "Top Level Stack" -xy 0,130 -wh 256,324
+    manipulator "read field.user.0:Read Field Browser" -w browser -p "read field.user.0" \
+        -xy 10,10 -wh 236,194
+    manipulator "read field.user.0:Data Conversion" -w radio_buttons -p "read field.user.0" \
+        -xy 10,204 -wh 118,44
+    manipulator "read field.user.0:Read Status" -w textblock -p "read field.user.0" \
+        -xy 10,248 -wh 236,66
+   panel "field to mesh.user.1" -w panel -p "Top Level Stack" \
+       -xy 0,130 -wh 228,150
+    manipulator "field to mesh.user.1:Z scale" -w dial -p "field to mesh.user.1" \
+        -xy 10,10 -wh 90,130
+    manipulator "field to mesh.user.1:Normalize" -w toggle -p "field to mesh.user.1" \
+        -xy 100,10 -wh 118,22
+   panel "generate colormap.user.2" -w panel -p "Top Level Stack" \
+       -xy 0,108 -wh 256,566
+    manipulator "generate colormap.user.2:colormap" -w color_editor -p "generate colormap.user.2" \
+        -xy 10,10 -wh 236,416
+    manipulator "generate colormap.user.2:lo value" -w dial -p "generate colormap.user.2" \
+        -xy 10,426 -wh 90,130
+    manipulator "generate colormap.user.2:hi value" -w dial -p "generate colormap.user.2" \
+        -xy 100,426 -wh 90,130
+   panel "color legend.user.3" -w panel -p "Top Level Stack" \
+       -xy 0,130 -wh 256,538
+    manipulator "color legend.user.3:legend control" -w text -p "color legend.user.3" \
+        -xy 10,10 -wh 236,22
+    manipulator "color legend.user.3:position" -w radio_buttons -p "color legend.user.3" \
+        -xy 10,32 -wh 118,44
+    manipulator "color legend.user.3:Reverse Colors" -w toggle -p "color legend.user.3" \
+        -xy 127,32 -wh 118,22
+    manipulator "color legend.user.3:Legend Outline" -w toggle -p "color legend.user.3" \
+        -xy 127,54 -wh 118,22
+    manipulator "color legend.user.3:Outline Gray Scale" -w islider -p "color legend.user.3" \
+        -xy 10,76 -wh 236,32
+    manipulator "color legend.user.3:Label Controls" -w text -p "color legend.user.3" \
+        -xy 10,108 -wh 236,22
+    manipulator "color legend.user.3:Labels" -w toggle -p "color legend.user.3" \
+        -xy 10,130 -wh 118,22
+    manipulator "color legend.user.3:Ticks" -w toggle -p "color legend.user.3" \
+        -xy 127,130 -wh 118,22
+    manipulator "color legend.user.3:Number of Ticks" -w islider -p "color legend.user.3" \
+        -xy 10,152 -wh 236,32
+    manipulator "color legend.user.3:Label Height" -w slider -p "color legend.user.3" \
+        -xy 10,184 -wh 236,32
+    manipulator "color legend.user.3:Decimal Precision" -w islider -p "color legend.user.3" \
+        -xy 10,216 -wh 236,32
+    manipulator "color legend.user.3:Label Gray Scale" -w islider -p "color legend.user.3" \
+        -xy 10,258 -wh 236,32
+    manipulator "color legend.user.3:Label Font" -w islider -p "color legend.user.3" \
+        -xy 10,290 -wh 236,32
+    manipulator "color legend.user.3:Legend Position" -w text -p "color legend.user.3" \
+        -xy 10,322 -wh 236,22
+    manipulator "color legend.user.3:X Position" -w slider -p "color legend.user.3" \
+        -xy 10,344 -wh 236,32
+    manipulator "color legend.user.3:Y Position" -w slider -p "color legend.user.3" \
+        -xy 10,376 -wh 236,32
+    manipulator "color legend.user.3:Z Position" -w slider -p "color legend.user.3" \
+        -xy 10,408 -wh 236,32
+    manipulator "color legend.user.3:Thickness" -w slider -p "color legend.user.3" \
+        -xy 10,440 -wh 236,32
+    manipulator "color legend.user.3:Length" -w slider -p "color legend.user.3" \
+        -xy 10,472 -wh 236,32
+ panel "geometry viewer.user.4!display" -w container -p ui -xy 856,4 -wh 552,584\
+   -P zoom_coords string "0 0 0 0 0 <$NULL> 0 0 0 0"
+manipulator "geometry viewer.user.4":object -w none
+manipulator "geometry viewer.user.4":"Update Always" -w none
+manipulator "geometry viewer.user.4":"Update Image" -w none
+# End of file
