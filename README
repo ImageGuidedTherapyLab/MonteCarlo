@@ -1,9 +1,10 @@
-The files in this directory run a monte carlo simulation of laser fluence in a flat surfaced bit of tissue. 
-The code is meant to be run in matlab and can be executed by running scatter_simulation.m.
+The files in this directory run a monte carlo simulation of laser fluence in either a flat surfaced bit of tissue or as a interstitial laser.
+To simulate the flat laser initialize photons with the initialize.m program, to intialize photons for an interstitial situation use the diff_init.m. 
+The code is meant to be run in matlab and can be executed by running scatter_simulation_*.m.
 The needed input to this function is the number of photons to be run, the beam profile type, and the radius of the beam.
 It is programmed to output the number of photons reflected, absorbed, and transmitted, as well as three r-z grids representing the number of photons absorbed in grid section, the fluence of the grid section, and the heating  in the grid section.
 In the file scatter_simulation.m the index of reflection, mu_a, mu_s, g, the power, and the depth of tissue need to be specified.
-For more description see scatter_simulation.m
+For more description see scatter_simulation_*.m
 
 The file ascii_write.m is meant to take the output grid and write it into the appropriate ascii format for the dddas code.
 
