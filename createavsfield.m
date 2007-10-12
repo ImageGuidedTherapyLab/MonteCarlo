@@ -22,10 +22,10 @@ fprintf(fid,'dim1= %d  # dimension of axis 1 \n',size(A,1));
 fprintf(fid,'dim2= %d  # dimension of axis 2 \n',size(A,2));
 fprintf(fid,'nspace=2        # number of physical coordinates per point\n');
 fprintf(fid,'veclen=1        # number of components at each point\n');
-fprintf(fid,'data=double     # native format of linux\n');
+fprintf(fid,'data=float     # native format of linux\n');
 fprintf(fid,'field=rectilinear  # field type(uniform,rectilinear,irregular)\n');
 fprintf(fid,'\f\f');
-fwrite(fid,A,'double');
-fwrite(fid,bounds,'double');
+fwrite(fid,A','single');
+fwrite(fid,bounds,'single');
 
 fclose(fid);
