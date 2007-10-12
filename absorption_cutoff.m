@@ -8,11 +8,11 @@
 %weights, absorption count and absorption grid.
 
 function [PhotonsWN, AN,grid] = absorption_cutoff(PhotonsX,PhotonsY,PhotonsZ,...
-    PhotonsW, A, wa_mult, m, e,grid,delta_r,delta_z)
+    PhotonsW, A, wa_mult, m, e,grid,delta_r,delta_z,dim1,dim2)
       
     % Calculate amount of photon that is absorbed
     wa = PhotonsW*wa_mult;
-    [grid] = absorption_grid(PhotonsX,PhotonsY,PhotonsZ,wa,grid,delta_r,delta_z);
+    [grid] = absorption_grid(PhotonsX,PhotonsY,PhotonsZ,wa,grid,delta_r,delta_z,dim1,dim2);
     AN = A + sum(wa);
          
     % Calculate weight of photon that scatters
