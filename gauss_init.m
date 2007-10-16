@@ -4,7 +4,7 @@
 
 %  gauss_init: is a beam of irradiance that goes E(z) =
 %              E_0*exp(-2*r^2/R_0^2) where R_0 is the 1/exp(2) radius
-function [PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = gauss_init(num_photons,beam_loc, diff_len,R_0,n1,n2)
+function [PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = gauss_init(num_photons,beam_loc, diff_len,R_0,n1,n2,dist_r,dist_z)
 
 
 disp('initializing gauss beam');

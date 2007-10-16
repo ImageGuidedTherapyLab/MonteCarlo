@@ -5,7 +5,7 @@
 %  flat_init : is a beam with uniform irradiance over the circle centered
 %              at the origin with radius R_0
 
-function [PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = flat_init(num_photons,beam_loc, diff_len,R_0,n1,n2)
+function [PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = flat_init(num_photons,beam_loc, diff_len,R_0,n1,n2,dist_r,dist_z)
 
 
 disp('initializing flat beam');

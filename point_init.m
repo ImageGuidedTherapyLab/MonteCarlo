@@ -4,7 +4,7 @@
 
 
 %  point_init: assumes all photons are initiated with x=0.
-function [PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = point_init(num_photons,beam_loc, diff_len,R_0,n1,n2)
+function [PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = point_init(num_photons,beam_loc, diff_len,R_0,n1,n2,dist_r,dist_z)
 
 
 disp('initializing point source');

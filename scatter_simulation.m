@@ -18,12 +18,14 @@
 %the fluence in each of the elements representing the same region.The 
 %expected value for R is .225 and for T is .015.
 
-function [R,A,T,grid,fluence,heating] = scatter_simulation(num_photons,R_0,g,mu_a,mu_s,P,init)
+function [R,A,T,grid,fluence,heating] = scatter_simulation(num_photons,R_0,g,mu_a,mu_s,P,init,dist_r,dist_z)
 
 % mu_a =  absorption coefficient [cm^-1]
 % mu_s =  scattering coefficient [cm^-1]
 % g    =  expected vale for cosine of angle scattering
 % P    =  total Power [W] (a 2d grid of power values)
+% dist_r,dist_z = coefficients to determine initial photon distribution for
+%                  interstitial scatter initialization
 
 
 tic; % function that keeps track f cputime
@@ -56,7 +58,6 @@ tic; % function that keeps track f cputime
  n1 = 1;           % refractive index of air
  n2 = 1.37;        % refractive index of tissue
  n = n1/n2;        % ratio to calculate Snell's Law
- R_spec = 0;       % specular reflection constant
  theta_c = asin(n); % critical angle;
  dim1 = size(P,1);  % 1st dimension of grid
  dim2 = size(P,2);  % 2nd dimension of grid
@@ -78,7 +79,7 @@ tic; % function that keeps track f cputime
 %                    gauss_init: Gaussian beam with 1/exp(2) radius R_0
 %                    point_init: Point source at the origin
                     
-[PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = init(num_photons,BEAM_LOC,DIFF_LEN,R_0,n1,n2);
+[PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = init(num_photons,BEAM_LOC,DIFF_LEN,R_0,n1,n2,dist_r,dist_z);
 
 PhotonsW = ones(num_photons,1);
 

@@ -3,12 +3,14 @@
 %the matrix
 
 
-function ascii_write(A,B, filebase,delta_r,delta_z)
+function ascii_write(A,B, filebase,delta_r,delta_z,...
+                         g,mu_a,mu_s,dist_r,dist_z);
 
 %  A is the matrix being written
 %  name is a base string of the file name to be written
 %  delta_r  = spacing along the r-axis [units can be anything]
 %  delta_z  = spacing along the z-axis [units can be anything]
+%  g,mu_a,mu_s,dist_r,dist_r used to tag file w/ parameters used to make it.
 
 fid = fopen( sprintf('%s.asc',filebase)  ,'w');
 
@@ -25,6 +27,9 @@ if(p == 1 && q ==1)
       fprintf(fid, '\n');
   end
 end
+% remember params used for this file
+fprintf(fid,'# g = %f, mu_a = %f, mu_s = %f, dist_r = %f, dist_z = %f \n',...
+                                                   g,mu_a,mu_s,dist_r,dist_z);
 
 fclose(fid);
 
@@ -40,6 +45,9 @@ for i=0:size(A,1)-1
 end
 % write out avs file header
 fprintf(fid,'# AVS field file \n');
+% remember params used for this file
+fprintf(fid,'# g = %f, mu_a = %f, mu_s = %f, dist_r = %f, dist_z = %f \n',...
+                                                   g,mu_a,mu_s,dist_r,dist_z);
 fprintf(fid,'ndim=2 # number of dimensions in the field \n');
 fprintf(fid,'dim1= %d  # dimension of r-axis \n',size(A,2));
 fprintf(fid,'dim2= %d  # dimension of z-axis \n',size(A,1));
