@@ -34,7 +34,7 @@ fprintf(fid,'# g = %f, mu_a = %f, mu_s = %f, dist_r = %f, dist_z = %f \n',...
 fclose(fid);
 
 % TRANSPOSING THE MATRIX!!!!!!!!!!!!!!!!!!!!!!
-fid = fopen( sprintf('%s.fld',filebase) ,'w')
+fid = fopen( sprintf('%s.fld',filebase) ,'w');
 % create rectilinear coordinate buffer
 bounds = zeros(size(A,1)+size(A,2),1);
 for i=0:size(A,2)-1

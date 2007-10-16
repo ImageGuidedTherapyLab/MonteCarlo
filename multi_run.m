@@ -69,7 +69,7 @@ g    = [.7];             % comment/uncomment for single run
 %dist_z = [.5];           % comment/uncomment for single run
 
 % set number of times to run
-nrun = 1 ;
+nrun = 10 ;
 
 
 % Create distance grid for isotropic comparison
@@ -82,30 +82,33 @@ for iii = 1:dimz
     end
 end
 
+ntotal = size(g,2)*size(mu_a,2)*size(mu_s,2)*size(dist_r,2)*size(dist_z,2);
 icount = 0;  
 for ig = 1:size(g,2)
   for ia = 1:size(mu_a,2)
     for is = 1:size(mu_s,2)
        for ir = 1:size(dist_r,2)
           for iz = 1:size(dist_z,2)
-             % initialize grid
-    disp(sprintf('g = %f, mu_a = %f, mu_s = %f', g(ig),mu_a(ia),mu_s(is) ) )
-    disp(sprintf('dist_r = %f, dist_r = %f', dist_r(ir),dist_z(iz) ) )
+             disp(sprintf('\non grid %d of %d total grids',icount,ntotal))
+             disp(sprintf('g = %f, mu_a = %f, mu_s = %f',...
+                                                    g(ig),mu_a(ia),mu_s(is) ) )
+             disp(sprintf('dist_r = %f, dist_r = %f', dist_r(ir),dist_z(iz) ) )
              % calculate isotropic source term for comparison
              mu_tr  = (mu_a(ia) *100)+ (mu_s(is)*100) * (1-g(ig)); % 1/meters
              mu_eff = sqrt(3*(mu_a(ia)*100)*mu_tr); % 1/meters
              %isotropic should be units of  [W/m^3]
              isotropic = 3/4*(mu_a(ia)*100)*mu_tr*pi*...
                              (P(:,1:dimr-1).*exp(-mu_eff*dist)).* dist.^-1;
-             %generate monte carlo heating should be units of  [W/m^3]
+             %initialize monte carlo grid
              heating4 = zeros(dimz,dimr-1);
              for i = 1:nrun
-               disp(sprintf('%d of %d\n',i,nrun))
+               disp(sprintf('  photon set %d of %d',i,nrun))
                [R,A,T,grid,fluence,HEATING] = ...
                scatter_simulation(10000,R_0,g(ig),mu_a(ia),mu_s(is),P,...
                                   functer,dist_r(ir),dist_r(iz));
                heating4 = heating4 + HEATING;
              end
+             %monte carlo heating should be units of  [W/m^3]
              heating4 = heating4./nrun;  
              %output results
              name = sprintf(namebase,icount); icount = icount + 1 ;

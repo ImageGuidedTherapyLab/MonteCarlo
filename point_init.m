@@ -7,7 +7,7 @@
 function [PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = point_init(num_photons,beam_loc, diff_len,R_0,n1,n2,dist_r,dist_z)
 
 
-disp('initializing point source');
+disp('  initializing point source');
 PhotonsX = zeros(num_photons,1);
 PhotonsY = zeros(num_photons,1);
 PhotonsZ = zeros(num_photons,1);

@@ -7,7 +7,7 @@
 
 function [PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = diff_init(num_photons,beam_loc, diff_len,R_0,n1,n2,dist_r,dist_z)
 
-disp('initializing interstitial laser');
+disp('  initializing interstitial laser');
 PhotonsR     = R_0*rand(num_photons,1).^dist_r;
 PhotonsTheta = 2*pi*rand(num_photons,1);
 PhotonsX = PhotonsR.*cos(PhotonsTheta);
