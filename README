@@ -1,19 +1,28 @@
-The files in this directory run a monte carlo simulation of laser fluence in either a flat surfaced bit of tissue or as a interstitial laser.
-To simulate the flat laser initialize photons with the initialize.m program, to intialize photons for an interstitial situation use the diff_init.m. 
-The code is meant to be run in matlab and can be executed by running scatter_simulation_*.m.
-The needed input to this function is the number of photons to be run, the beam profile type, and the radius of the beam.
-It is programmed to output the number of photons reflected, absorbed, and transmitted, as well as three r-z grids representing the number of photons absorbed in grid section, the fluence of the grid section, and the heating  in the grid section.
-In the file scatter_simulation.m the index of reflection, mu_a, mu_s, g, the power, and the depth of tissue need to be specified.
+The files in this directory run a monte carlo simulation of laser fluence in
+either a flat surfaced bit of tissue or as a interstitial laser.
+Various laser types are implemented via different function pointers.
+see multi_run.m for available function pointers
+
+The needed input to this function is the number of photons to be run,
+the beam profile type, and the radius of the beam.
+It is programmed to output the number of photons reflected, absorbed, and 
+transmitted, as well as three r-z grids representing the number of photons
+absorbed in grid section, the fluence of the grid section, and the heating  
+in the grid section.  mu_a, mu_s, g, and the power, are passed to the
+matlab function scatter_simulation. The index of reflection and
+the depth of tissue needs to be specified.
 For more description see scatter_simulation_*.m
 
-The file ascii_write.m is meant to take the output grid and write it into the appropriate ascii format for the dddas code.
-
-multi_run.m is a file meant to allow the user to run the code multiple times with multiple values of mu_a mu_s and g via the appropriate scatter_simulations, scatter_simulation_mua.m scatter_simulation_mus.m and scatter_simulation_g.
-
-
-createavsfield.m is a function to create a avs field file of the monted carlo
-field type:
+The file ascii_write.m is meant to take the output grid and write it
+into the appropriate ascii format for the dddas code also outputs an
+avs field file. type:
 
 avs -cli "script -play field_vis.cli"
 
 to open avs network
+
+
+multi_run.m is a file meant to allow the user to run the code multiple
+ times with multiple values of mu_a mu_s and g.
+
+
