@@ -10,8 +10,9 @@ DELTA_R = .01;   %  DELTA_R  = spacing along the r-axis [cm]
 DELTA_Z = .01;   %  DELTA_Z  = spacing along the z-axis [cm]
 
 
+% beam radius
 
-
+R_0 = .38 ;  % [cm]
 
 
 % create power grid
@@ -22,7 +23,7 @@ c = floor(BEAM_LOC/DELTA_Z)+1; %grid location of the center of the diff tip
 l = floor(.5*DIFF_LEN/DELTA_Z); %number of grid points from center of diff tip to end
 w = floor(.4/DELTA_R);   %number of grid points out from laser for cooling
 P(c-l:c+l,1:1+w) = 0;
-%P = ones(500,501); uncomment for uniform power
+P = ones(dim1,dim2); % comment/uncomment for uniform power
 
 
 % set function pointer representing type of beam
@@ -41,110 +42,37 @@ mu_s = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
 g = [0,.1,.2,.3,.4,.5,.6,.7,.8,.9,.99];
 
 % set number of times to run
-k = 1 
+nrun = 1 
 
 % Create baseline grid
 heating4 = zeros(dim1,dim2-1);
 
-for i = 1:k
-    i
-    [R,A,T,grid,fluence,HEATING] = scatter_simulation(10000,.38,g(1),mu_a(1),mu_s(1),P,functer);
-    heating4 = heating4 + HEATING;
+namebase = 'Flat_g%d_mua%d_mus%d';
+namebase = 'Gauss_g%d_mua%d_mus%d';
+%for ig = 1:size(g,1)
+%  for ia = 1:size(mu_a,1)
+%    for is = 1:size(mu_s,1)
+for ig = 8:8
+  for ia = 1:1
+    for is = 15:15
+      for i = 1:nrun
+        i
+        [R,A,T,grid,fluence,HEATING] = ...
+         scatter_simulation(10000,R_0,g(ig),mu_a(ia),mu_s(is),P,functer);
+        heating4 = heating4 + HEATING;
+      end
+      heating4 = heating4./nrun;  
+      % calculate isotropic source term for comparison
+      [R,Z] = meshgrid([DELTA_R/2:DELTA_R:(dim1+0.5)*DELTA_R],...
+                       [DELTA_Z/2:DELTA_Z:(dim2-1.5)*DELTA_Z]);
+      dist = sqrt(R.^2 + (BEAM_LOC - Z).^2);
+      mu_tr  = mu_a(ia) + mu_s(is) * (1-g(ig));
+      mu_eff = sqrt(3*mu_a(ia)*mu_tr);
+      isotropic = 3/4*mu_a(ia)*mu_tr*pi* (P.*exp(-mu_eff*dist)).* dist.^-1;
+      name = sprintf(namebase,ig,ia,is);
+      ascii_write(heating4,isotropic,name,DELTA_R,DELTA_Z)
+    end
+  end
 end
-    heating4 = heating4./k;  
-
-ascii_write(heating4,'Original',DELTA_R,DELTA_Z)
 
 
-%
-%
-%for j = 1:17
-%   
-%    heating4 = zeros(512,512);
-%    for i = 1:k
-%        i
-%    
-%        [R,A,T,grid,fluence,HEATING] = scatter_simulation_mua(100000,2,.38,a(j));
-%        heating4 = heating4 + HEATING;
-%    end
-%        heating4 = heating4./k;  
-%        name = sprintf('Gauss_mua%d.asc',j);
-%        ascii_write(heating4,name);
-%end
-%
-%for j = 1:17
-%
-%    heating4 = zeros(512,512);
-%    for i = 1:k
-%        i
-%        [R,A,T,grid,fluence,HEATING] = scatter_simulation_mua(100000,1,.38,a(j));
-%        heating4 = heating4 + HEATING;
-%    end
-%        heating4 = heating4./k;
-%        name = sprintf('Flat_mua%d.asc',j);
-%        ascii_write(heating4,name);
-%end
-%
-%
-%
-%for j = 1:11
-%   
-%    heating4 = zeros(512,512);
-%    for i = 1:k
-%        i
-%   
-%        [R,A,T,grid,fluence,HEATING] = scatter_simulation_g(100000,2,.38,g(j));
-%        heating4 = heating4 + HEATING;
-%    end
-%        heating4 = heating4./k;  
-%        name = sprintf('Gauss_g%d.asc',j);
-%        ascii_write(heating4,name);
-%end
-%
-%
-%for j = 1:11
-%
-%    heating4 = zeros(512,512);
-%    for i = 1:k
-%        i
-%
-%        [R,A,T,grid,fluence,HEATING] = scatter_simulation_g(100000,1,.38,g(j));
-%        heating4 = heating4 + HEATING;
-%    end
-%        heating4 = heating4./k;
-%        name = sprintf('Flat_g%d.asc',j);
-%        ascii_write(heating4,name);
-%end
-%
-%
-%
-%      
-%
-%for j = 1:25
-%   
-%    heating4 = zeros(512,512);
-%    for i = 1:k
-%        i
-%    
-%        [R,A,T,grid,fluence,HEATING] = scatter_simulation_mus(100000,2,.38,s(j));
-%        heating4 = heating4 + HEATING;
-%    end
-%        heating4 = heating4./k;  
-%        name = sprintf('Gauss_mus%d.asc',j);
-%        ascii_write(heating4,name);
-%end
-%
-%
-%for j = 1:25
-%
-%    heating4 = zeros(512,512);
-%    for i = 1:k
-%        i
-%        [R,A,T,grid,fluence,HEATING] = scatter_simulation_mus(100000,1,.38,s(j));
-%       heating4 = heating4 + HEATING;
-%    end
-%       heating4 = heating4./k;
-%       name = sprintf('Flat_mus%d.asc',j);
-%       ascii_write(heating4,name);
-%end
-%

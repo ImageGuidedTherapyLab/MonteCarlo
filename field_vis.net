@@ -18,7 +18,7 @@ port_connect "color legend.user.3":0 "geometry viewer.user.4":0
 port_connect "color range.user.6":0 "color legend.user.3":0
 port_connect "color range.user.6":0 "field to mesh.user.1":1
 port_connect "generate axes.user.8":0 "geometry viewer.user.4":0
-parm_set "read field.user.0":"Read Field Browser" ./mc.fld
+parm_set "read field.user.0":"Read Field Browser" ./Original.fld
 parm_set "field to mesh.user.1":"Z scale" 0
 parm_set "color legend.user.3":"X Position" -0.9418604374
 parm_set "color legend.user.3":"Y Position" -0.1046511605
