@@ -30,10 +30,10 @@ P(c-l:c+l,1:1+w) = 0;
 %                    flat_init : Flat beam of radium R_0
 %                    gauss_init: Gaussian beam with 1/exp(2) radius R_0
 %                    point_init: Point source at the origin
-functer = @flat_init
-functer = @gauss_init
-functer = @point_init
-functer = @diff_init
+functer = @gauss_init ;
+functer = @flat_init  ;
+functer = @point_init ;
+functer = @diff_init  ;
 
 % setup for parameter study 
 mu_a = [.44,.704,1.008,1.312,1.616,1.92,2.224,2.528,2.832,3.136,3.44,3.744,4.048,4.352,4.656,4.96,5.0];

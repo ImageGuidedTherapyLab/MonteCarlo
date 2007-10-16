@@ -56,7 +56,6 @@ tic; % function that keeps track f cputime
  n1 = 1;           % refractive index of air
  n2 = 1.37;        % refractive index of tissue
  n = n1/n2;        % ratio to calculate Snell's Law
- R_spec = (n1 - n2)^2/(n1+n2)^2; % specular reflection constant
  R_spec = 0;       % specular reflection constant
  theta_c = asin(n); % critical angle;
  dim1 = size(P,1);  % 1st dimension of grid
@@ -70,13 +69,16 @@ tic; % function that keeps track f cputime
 % PhotonsCX          angle in 1st direction of photon travel
 % PhotonsCY          angle in 2nd direction of photon travel
 % PhotonsCZ          angle in 3rd direction of photon travel
+% R_spec             specular reflection constant
 
 
 % init is used as a function pointer to:
-%             diff_init   -   initialize photons for interstitial scattering
-%             initialize  -
+%                    diff_init : interstitial beam
+%                    flat_init : Flat beam of radium R_0
+%                    gauss_init: Gaussian beam with 1/exp(2) radius R_0
+%                    point_init: Point source at the origin
                     
-[PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ] = init(num_photons,BEAM_LOC,DIFF_LEN);
+[PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = init(num_photons,BEAM_LOC,DIFF_LEN,R_0,n1,n2);
 
 PhotonsW = ones(num_photons,1);
 
