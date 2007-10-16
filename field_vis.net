@@ -1,35 +1,49 @@
 #!/usr/bin/avs -network
 version 5.5 (50.86 i686 ogl)
 module "read field.user.0" -xy 548,8 -ex $Path/avs_library/mongo
-module "field to mesh.user.1" -xy 388,199 -ex $Path/avs_library/mongo
+module "field to mesh.user.1" -xy 348,302 -ex $Path/avs_library/mongo
 module "generate colormap.user.2" -xy 112,52
 module "color legend.user.3" -xy 198,199 -ex $Path/avs_library/mongo
-module "geometry viewer.user.4" -xy 272,302
+module "geometry viewer.user.4" -xy 138,449
 module "color range.user.5" -xy 168,139 -ex $Path/avs_library/mongo
 module "set view.user.6" -xy 0,5 -ex $Path/avs_library/mongo
 module "generate axes.user.7" -xy 18,159 -ex $Path/avs_library/mongo
 module "extract scalar.user.8" -xy 358,68 -ex $Path/avs_library/mongo
-module crop.user.9 -xy 388,128 -ex $Path/avs_library/mongo
+module crop.user.9 -xy 378,162 -ex $Path/avs_library/mongo
 module "extract scalar.user.10" -xy 558,78 -ex $Path/avs_library/mongo
-module crop.user.11 -xy 548,138 -ex $Path/avs_library/mongo
-module "field to mesh.user.12" -xy 542,198 -ex $Path/avs_library/mongo
-module "print field.user.13" -xy 698,158 -ex $Path/avs_library/mongo
-port_connect "read field.user.0":0 "print field.user.13":0
-port_connect "read field.user.0":0 "extract scalar.user.8":0
+module crop.user.11 -xy 558,162 -ex $Path/avs_library/mongo
+module "field to mesh.user.12" -xy 528,292 -ex $Path/avs_library/mongo
+module "print field.user.13" -xy 696,312 -ex $Path/avs_library/mongo
+module "extract graph.user.14" -xy 378,379 -ex $Path/avs_library/mongo
+port_vis "extract graph.user.14":"Graph Select" -on
+module "extract graph.user.15" -xy 548,389 -ex $Path/avs_library/mongo
+port_vis "extract graph.user.15":"Graph Select" -on
+module AVSGraph.user.16 -xy 420,516 -ex $Path/avs_library/AVSGraph
+module integer.user.17 -xy 468,339 -ex $Path/avs_library/mongo
 port_connect "read field.user.0":0 "extract scalar.user.10":0
+port_connect "read field.user.0":0 "extract scalar.user.8":0
+port_connect "read field.user.0":0 "print field.user.13":0
 port_connect "field to mesh.user.1":0 "geometry viewer.user.4":0
 port_connect "generate colormap.user.2":0 "color range.user.5":1
 port_connect "color legend.user.3":0 "geometry viewer.user.4":0
-port_connect "color range.user.5":0 "field to mesh.user.12":1
-port_connect "color range.user.5":0 "color legend.user.3":0
 port_connect "color range.user.5":0 "field to mesh.user.1":1
+port_connect "color range.user.5":0 "color legend.user.3":0
+port_connect "color range.user.5":0 "field to mesh.user.12":1
 port_connect "generate axes.user.7":0 "geometry viewer.user.4":0
-port_connect "extract scalar.user.8":0 "color range.user.5":0
 port_connect "extract scalar.user.8":0 crop.user.9:0
+port_connect "extract scalar.user.8":0 "color range.user.5":0
+port_connect crop.user.9:0 "extract graph.user.14":0
 port_connect crop.user.9:0 "field to mesh.user.1":0
 port_connect "extract scalar.user.10":0 crop.user.11:0
+port_connect crop.user.11:0 "extract graph.user.15":0
 port_connect crop.user.11:0 "field to mesh.user.12":0
 port_connect "field to mesh.user.12":0 "geometry viewer.user.4":0
+port_connect "extract graph.user.14":0 AVSGraph.user.16:15
+port_connect "extract graph.user.14":1 "geometry viewer.user.4":0
+port_connect "extract graph.user.15":0 AVSGraph.user.16:14
+port_connect "extract graph.user.15":1 "geometry viewer.user.4":0
+port_connect integer.user.17:0 "extract graph.user.15":1
+port_connect integer.user.17:0 "extract graph.user.14":1
 parm_set "read field.user.0":"Read Field Browser" /ices/fuentes/DDDAS/3DhpA_work/montecarlo/Diff_g8_mua1_mus15.fld
 parm_set "field to mesh.user.1":"Z scale" -0.009999999776
 parm_set "color legend.user.3":"X Position" -0.9418604374
@@ -44,10 +58,20 @@ parm_set "extract scalar.user.8":Channel isotropic -range monte_carlo;isotropic 
 parm_set crop.user.9:"max x" 126 -range 0 126
 parm_set crop.user.9:"max y" 256 -range 0 256
 parm_set "extract scalar.user.10":Channel monte_carlo -range monte_carlo;isotropic ;
+parm_set crop.user.11:"max x" 126 -range 0 126
 parm_set "field to mesh.user.12":"Z scale" -0.009999999776
+parm_set "extract graph.user.14":"Graph Select" 7 -range 0 126
+parm_set "extract graph.user.15":"Graph Select" 7 -range 0 126
+parm_set AVSGraph.user.16:PlotTitle MonteCarlo/Isotropic
+parm_set AVSGraph.user.16:XAxisLabel "Distance (m)"
+parm_set AVSGraph.user.16:YAxisLabel "fluence (W/m^3)"
+parm_set AVSGraph.user.16:"Use X Limits" true
+parm_set AVSGraph.user.16:"User X Min" 0.009999999776
+parm_set AVSGraph.user.16:"User X Max" 0.01999999955
+parm_set integer.user.17:"integer value" 7
 geom_set_scene -scene "geometry viewer.user.4"
 geom_set_camera_name "Camera 1"
-geom_resize_camera -view "Camera 1" 776 699
+geom_resize_camera -view "Camera 1" 1050 836
 #
 # State for view: Camera 1
 #
@@ -69,11 +93,12 @@ geom_set_light -type ambient -state 1
 #
 geom_set_cur_cli_obj top
 geom_set_matrix   -mat \
-                  321.831    -71.915    216.314    0 \
-                    -226.982    -135.638    292.61    0 \
-                    21.0388    -363.276    -152.075    0 \
-                    1.10812    0.656599    -6.75015    1 
-geom_set_position   0.824742 1.00515 -4.65661e-10
+                  288.873    -65.4806    109.019    0 \
+                    -117.71    -240.083    167.706    0 \
+                    48.1339    -194.146    -244.154    0 \
+                    -0.372092    4.10086    -3.28657    1 
+geom_set_position   -8.34465e-07 1.01328e-06 -1.04904e-05
+geom_set_obj_window 0 0.014742 0 0.029952 0 0.000234
 #
 # State for object: "color legend"
 #
@@ -117,11 +142,9 @@ geom_set_cur_cli_obj -pop
 geom_set_cur_cli_obj -push
 geom_set_name_context "field to mesh.user.1"
 geom_create_obj "field mesh" -mod "field to mesh.user.1"
-geom_set_matrix   -mat \
-                  0.99991    0.00282033    0.0131456    0 \
-                    -0.00254371    0.999776    -0.0210147    0 \
-                    -0.013202    0.0209794    0.999693    0 \
-                    0    0    0    1 
+geom_set_color 0.990 0.990 0.990
+geom_set_properties -amb 0.300 -diff 0.700 -spec 0.000 -exp 50.000 \
+ -trans 1.000 -spec_col 0.990 0.990 0.990
 geom_set_name_context
 geom_set_cur_cli_obj -pop
 #
@@ -144,12 +167,30 @@ geom_create_obj axes -mod "generate axes.user.7"
 geom_set_trans_mode parent
 geom_set_name_context
 geom_set_cur_cli_obj -pop
+#
+# State for object: "graph axis"
+#
+geom_set_cur_cli_obj -push
+geom_set_name_context "extract graph.user.14"
+geom_create_obj "graph axis" -mod "extract graph.user.14"
+geom_set_obj_window 0 0.014742 0 0.029952 0 0.000234
+geom_set_name_context
+geom_set_cur_cli_obj -pop
+#
+# State for object: "graph axis"
+#
+geom_set_cur_cli_obj -push
+geom_set_name_context "extract graph.user.15"
+geom_create_obj "graph axis" -mod "extract graph.user.15"
+geom_set_obj_window 0 0.014742 0 0.029952 0 0.000234
+geom_set_name_context
+geom_set_cur_cli_obj -pop
 shell "ui" shell
  panel Application -w app_panel -p ui -xy 0,0 -wh 260,972
-  panel "Top Level Stack" -w master_stack -p Application -xy 2,100 -wh 256,2317\
+  panel "Top Level Stack" -w master_stack -p Application -xy 2,100 -wh 278,2383\
    -P columns integer 1
    panel "generate colormap.user.2" -w panel -p "Top Level Stack" \
-       -xy 0,240 -wh 256,565
+       -xy 0,64 -wh 256,565
     manipulator "generate colormap.user.2:colormap" -w color_editor -p "generate colormap.user.2" \
         -xy 10,9 -wh 236,416
     manipulator "generate colormap.user.2:lo value" -w dial -p "generate colormap.user.2" \
@@ -303,26 +344,26 @@ shell "ui" shell
     manipulator "generate axes.user.7:Z Label String" -w typein -p "generate axes.user.7" -hide \
         -xy 10,609 -wh 236,22
    panel "extract scalar.user.8" -w panel -p "Top Level Stack" \
-       -xy 0,240 -wh 138,64
+       -xy 0,306 -wh 138,64
     manipulator "extract scalar.user.8:Channel" -w radio_buttons -p "extract scalar.user.8" \
         -xy 10,10 -wh 118,44
    panel "extract scalar.user.10" -w panel -p "Top Level Stack" \
-       -xy 0,64 -wh 138,64
+       -xy 0,306 -wh 138,64
     manipulator "extract scalar.user.10:Channel" -w radio_buttons -p "extract scalar.user.10" \
         -xy 10,10 -wh 118,44
    panel "field to mesh.user.12" -w panel -p "Top Level Stack" \
-       -xy 0,240 -wh 228,150
+       -xy 0,64 -wh 228,150
     manipulator "field to mesh.user.12:Z scale" -w dial -p "field to mesh.user.12" \
         -xy 10,10 -wh 90,130
     manipulator "field to mesh.user.12:Normalize" -w toggle -p "field to mesh.user.12" \
         -xy 100,10 -wh 118,22
    panel "field to mesh.user.1" -w panel -p "Top Level Stack" \
-       -xy 0,240 -wh 227,149
+       -xy 0,64 -wh 227,149
     manipulator "field to mesh.user.1:Z scale" -w dial -p "field to mesh.user.1" \
         -xy 10,9 -wh 90,130
     manipulator "field to mesh.user.1:Normalize" -w toggle -p "field to mesh.user.1" \
         -xy 100,9 -wh 118,22
-   panel crop.user.9 -w panel -p "Top Level Stack" -xy 0,64 -wh 200,432
+   panel crop.user.9 -w panel -p "Top Level Stack" -xy 0,306 -wh 200,432
     manipulator "crop.user.9:min x" -w idial -p crop.user.9 -xy 10,10 -wh 90,130
     manipulator "crop.user.9:max x" -w idial -p crop.user.9 -xy 100,10 -wh 90,130
     manipulator "crop.user.9:min y" -w idial -p crop.user.9 -xy 10,140 -wh 90,130
@@ -333,7 +374,7 @@ shell "ui" shell
         -xy 100,270 -wh 90,130
     manipulator "crop.user.9:size to fit" -w toggle -p crop.user.9 \
         -xy 10,400 -wh 118,22
-   panel crop.user.11 -w panel -p "Top Level Stack" -xy 0,240 -wh 200,432
+   panel crop.user.11 -w panel -p "Top Level Stack" -xy 0,306 -wh 200,432
     manipulator "crop.user.11:min x" -w idial -p crop.user.11 \
         -xy 10,10 -wh 90,130
     manipulator "crop.user.11:max x" -w idial -p crop.user.11 \
@@ -348,6 +389,175 @@ shell "ui" shell
         -xy 100,270 -wh 90,130
     manipulator "crop.user.11:size to fit" -w toggle -p crop.user.11 \
         -xy 10,400 -wh 118,22
+   panel "extract graph.user.14" -w panel -p "Top Level Stack" \
+       -xy 0,328 -wh 228,282
+    manipulator "extract graph.user.14:Graph Select" -w idial -p "extract graph.user.14" \
+        -xy 10,10 -wh 90,130
+    manipulator "extract graph.user.14:axis" -w radio_buttons -p "extract graph.user.14" \
+        -xy 100,10 -wh 118,44
+    manipulator "extract graph.user.14:Abscissa Mapping" -w text -p "extract graph.user.14" \
+        -xy 10,140 -wh 118,22
+    manipulator "extract graph.user.14:abs mapping" -w radio_buttons -p "extract graph.user.14" \
+        -xy 10,162 -wh 118,110
+   panel "extract graph.user.15" -w panel -p "Top Level Stack" \
+       -xy 0,306 -wh 228,282
+    manipulator "extract graph.user.15:Graph Select" -w idial -p "extract graph.user.15" \
+        -xy 10,10 -wh 90,130
+    manipulator "extract graph.user.15:axis" -w radio_buttons -p "extract graph.user.15" \
+        -xy 100,10 -wh 118,44
+    manipulator "extract graph.user.15:Abscissa Mapping" -w text -p "extract graph.user.15" \
+        -xy 10,140 -wh 118,22
+    manipulator "extract graph.user.15:abs mapping" -w radio_buttons -p "extract graph.user.15" \
+        -xy 10,162 -wh 118,110
+   panel AVSGraph.user.16 -w panel -p "Top Level Stack" -xy 0,306 -wh 278,611
+    panel AVSGraph.user.16!Menu -w stack -p AVSGraph.user.16 \
+        -xy 0,0 -wh 268,601\
+   -P columns integer 2\
+   -P width integer 2\
+   -P title string "AVSGraph Menu"
+     panel AVSGraph.user.16!page.1 -w panel -p AVSGraph.user.16!Menu \
+         -xy 0,64 -wh 256,218\
+   -P title string "Plot Type"
+      manipulator "AVSGraph.user.16:Plot Type" -w radio_buttons -p AVSGraph.user.16!page.1 \
+          -xy 60,10 -wh 118,198
+     panel AVSGraph.user.16!page.2 -w panel -p AVSGraph.user.16!Menu \
+         -xy 0,64 -wh 256,420\
+   -P title string "Style"
+      manipulator "AVSGraph.user.16:Line Thickness" -w islider -p AVSGraph.user.16!page.2 \
+          -xy 10,10 -wh 236,32
+      manipulator "AVSGraph.user.16:Line Style" -w choice_browser -p AVSGraph.user.16!page.2 \
+          -xy 10,40 -wh 236,151
+      manipulator "AVSGraph.user.16:Marker Size" -w islider -p AVSGraph.user.16!page.2 \
+          -xy 10,200 -wh 236,32
+      manipulator "AVSGraph.user.16:Marker Type" -w choice_browser -p AVSGraph.user.16!page.2 \
+          -xy 10,230 -wh 236,151
+      manipulator "AVSGraph.user.16:Bar Frames" -w toggle -p AVSGraph.user.16!page.2 \
+          -xy 70,390 -wh 118,22
+     panel AVSGraph.user.16!page.3 -w panel -p AVSGraph.user.16!Menu \
+         -xy 0,152 -wh 256,260\
+   -P title string "Title"
+      manipulator AVSGraph.user.16:PlotTitle -w typein -p AVSGraph.user.16!page.3 \
+          -xy 10,10 -wh 236,22
+      manipulator "AVSGraph.user.16:Title Height" -w islider -p AVSGraph.user.16!page.3 \
+          -xy 10,40 -wh 236,32
+      manipulator "AVSGraph.user.16:Title Color" -w choice_browser -p AVSGraph.user.16!page.3 \
+          -xy 10,70 -wh 236,151
+      manipulator "AVSGraph.user.16:Top Title" -w toggle -p AVSGraph.user.16!page.3 \
+          -xy 60,230 -wh 118,22
+     panel AVSGraph.user.16!page.4 -w panel -p AVSGraph.user.16!Menu \
+         -xy 0,64 -wh 256,208\
+   -P title string "Legend"
+      manipulator "AVSGraph.user.16:Plot Legend" -w toggle -p AVSGraph.user.16!page.4 \
+          -xy 70,10 -wh 118,22
+      manipulator "AVSGraph.user.16:Legend Title" -w typein -p AVSGraph.user.16!page.4 \
+          -xy 10,40 -wh 236,22
+      panel AVSGraph.user.16!page.5 -w panel -p AVSGraph.user.16!page.4 \
+          -xy 60,70 -wh 138,128\
+   -P title string "Placement"
+       manipulator "AVSGraph.user.16:Legend Placement" -w radio_buttons -p AVSGraph.user.16!page.5 \
+           -xy 10,30 -wh 118,88
+     panel AVSGraph.user.16!page.6 -w panel -p AVSGraph.user.16!Menu \
+         -xy 0,152 -wh 268,272\
+   -P title string "Axes"
+      manipulator "AVSGraph.user.16:Top X Axis" -w toggle -p AVSGraph.user.16!page.6 \
+          -xy 70,110 -wh 118,22
+      manipulator "AVSGraph.user.16:Right Y Axis" -w toggle -p AVSGraph.user.16!page.6 \
+          -xy 70,140 -wh 118,22
+      manipulator AVSGraph.user.16:XAxisLabel -w typein -p AVSGraph.user.16!page.6 \
+          -xy 10,170 -wh 236,22
+      manipulator AVSGraph.user.16:YAxisLabel -w typein -p AVSGraph.user.16!page.6 \
+          -xy 10,200 -wh 236,22
+      manipulator "AVSGraph.user.16:Axis Scale" -w islider -p AVSGraph.user.16!page.6 \
+          -xy 10,230 -wh 236,32
+      panel AVSGraph.user.16!page.7 -w panel -p AVSGraph.user.16!page.6 \
+          -xy 0,10 -wh 258,86\
+   -P title string "Axes Visibility"
+       manipulator "AVSGraph.user.16:Axes Visibility" -w radio_buttons -p AVSGraph.user.16!page.7 \
+           -xy 130,10 -wh 118,66
+     panel AVSGraph.user.16!page.8 -w panel -p AVSGraph.user.16!Menu \
+         -xy 0,152 -wh 268,449\
+   -P title string "Tick Lines"
+      manipulator "AVSGraph.user.16:Fine Grid" -w toggle -p AVSGraph.user.16!page.8 \
+          -xy 63,80 -wh 118,22
+      panel AVSGraph.user.16!stack.9 -w stack -p AVSGraph.user.16!page.8 \
+          -xy 0,110 -wh 256,329\
+   -P columns integer 2\
+   -P width integer 2\
+   -P title string "Tick Line Type"
+       panel AVSGraph.user.16!page.10 -w panel -p AVSGraph.user.16!stack.9 \
+           -xy 0,64 -wh 256,232\
+   -P title string "Major"
+        manipulator "AVSGraph.user.16:Major Tick Lines" -w toggle -p AVSGraph.user.16!page.10 \
+            -xy 60,10 -wh 118,22
+        manipulator "AVSGraph.user.16:Major Tick Line Color" -w choice_browser -p AVSGraph.user.16!page.10 \
+            -xy 10,40 -wh 236,151
+        manipulator "AVSGraph.user.16:Major Tick Stippled" -w toggle -p AVSGraph.user.16!page.10 \
+            -xy 60,200 -wh 118,22
+       panel AVSGraph.user.16!page.11 -w panel -p AVSGraph.user.16!stack.9 \
+           -xy 0,64 -wh 256,265\
+   -P title string "Minor"
+        manipulator "AVSGraph.user.16:Minor Tick Lines" -w toggle -p AVSGraph.user.16!page.11 \
+            -xy 60,10 -wh 118,22
+        manipulator "AVSGraph.user.16:Minor Tick Line Count" -w islider -p AVSGraph.user.16!page.11 \
+            -xy 10,40 -wh 236,32
+        manipulator "AVSGraph.user.16:Minor Tick Line Color" -w choice_browser -p AVSGraph.user.16!page.11 \
+            -xy 10,70 -wh 236,151
+        manipulator "AVSGraph.user.16:Minor Tick Stippled" -w toggle -p AVSGraph.user.16!page.11 \
+            -xy 60,230 -wh 118,22
+      panel AVSGraph.user.16!page.12 -w panel -p AVSGraph.user.16!page.8 \
+          -xy 0,10 -wh 258,62\
+   -P title string "Tick Line Layout"
+       manipulator "AVSGraph.user.16:Tick Line Layout" -w radio_buttons -p AVSGraph.user.16!page.12 \
+           -xy 130,10 -wh 118,44
+     panel AVSGraph.user.16!page.13 -w panel -p AVSGraph.user.16!Menu \
+         -xy 0,152 -wh 256,254\
+   -P title string "Limits"
+      manipulator "AVSGraph.user.16:Log X Axis" -w toggle -p AVSGraph.user.16!page.13 \
+          -xy 60,10 -wh 118,22
+      manipulator "AVSGraph.user.16:Log Y Axis" -w toggle -p AVSGraph.user.16!page.13 \
+          -xy 60,40 -wh 118,22
+      manipulator "AVSGraph.user.16:Use X Limits" -w toggle -p AVSGraph.user.16!page.13 \
+          -xy 60,70 -wh 118,22
+      manipulator "AVSGraph.user.16:Use Y Limits" -w toggle -p AVSGraph.user.16!page.13 \
+          -xy 60,100 -wh 118,22
+      manipulator "AVSGraph.user.16:User X Min" -w typein_real -p AVSGraph.user.16!page.13 \
+          -xy 10,130 -wh 236,22
+      manipulator "AVSGraph.user.16:User X Max" -w typein_real -p AVSGraph.user.16!page.13 \
+          -xy 10,160 -wh 236,22
+      manipulator "AVSGraph.user.16:User Y Min" -w typein_real -p AVSGraph.user.16!page.13 \
+          -xy 10,190 -wh 236,22
+      manipulator "AVSGraph.user.16:User Y Max" -w typein_real -p AVSGraph.user.16!page.13 \
+          -xy 10,220 -wh 236,22
+     panel AVSGraph.user.16!page.14 -w panel -p AVSGraph.user.16!Menu \
+         -xy 0,64 -wh 256,396\
+   -P title string "Hardcopy"
+      manipulator "AVSGraph.user.16:Hard Copy Device" -w choice_browser -p AVSGraph.user.16!page.14 \
+          -xy 10,10 -wh 236,151
+      manipulator "AVSGraph.user.16:Hardcopy File" -w browser -p AVSGraph.user.16!page.14 \
+          -xy 11,165 -wh 236,194
+      manipulator "AVSGraph.user.16:Make Hardcopy" -w oneshot -p AVSGraph.user.16!page.14 \
+          -xy 74,364 -wh 118,22
+     panel AVSGraph.user.16!page.15 -w panel -p AVSGraph.user.16!Menu \
+         -xy 0,64 -wh 256,230\
+   -P title string "Options"
+      manipulator "AVSGraph.user.16:Double Buffer" -w toggle -p AVSGraph.user.16!page.15 \
+          -xy 70,10 -wh 118,22
+      manipulator "AVSGraph.user.16:Clip To Viewport" -w toggle -p AVSGraph.user.16!page.15 \
+          -xy 70,40 -wh 118,22
+      manipulator "AVSGraph.user.16:Text Font" -w choice_browser -p AVSGraph.user.16!page.15 \
+          -xy 10,70 -wh 236,151
+     panel AVSGraph.user.16!page.16 -w panel -p AVSGraph.user.16!Menu \
+         -xy 0,152 -wh 256,230\
+   -P title string "Image"
+      manipulator "AVSGraph.user.16:Use Limits" -w toggle -p AVSGraph.user.16!page.16 \
+          -xy 70,10 -wh 118,22
+      manipulator "AVSGraph.user.16:User Min" -w typein_real -p AVSGraph.user.16!page.16 \
+          -xy 10,40 -wh 236,22\
+   -P width integer 4
+      manipulator "AVSGraph.user.16:User Max" -w typein_real -p AVSGraph.user.16!page.16 \
+          -xy 10,60 -wh 236,22
+      manipulator "AVSGraph.user.16:Num of Classes" -w idial -p AVSGraph.user.16!page.16 \
+          -xy 80,90 -wh 90,130
   panel page.0 -w panel -p Application -xy 343,93 -wh 325,727
  panel "print field.user.13" -w panel -p ui -xy 872,155 -wh 410,817
   manipulator "print field.user.13:Min X" -w typein_integer -p "print field.user.13" \
@@ -376,10 +586,10 @@ shell "ui" shell
       -xy 10,338 -wh 236,22
   manipulator "print field.user.13:Output Browser" -w text_browser -p "print field.user.13" \
       -xy 10,360 -wh 368,447
- panel "geometry viewer.user.4!display" -w container -p ui -xy 582,6 -wh 816,771\
+ panel "geometry viewer.user.4!display" -w container -p ui -xy 418,0 -wh 1090,908\
    -P zoom_coords string "0 0 0 0 0 <$NULL> 0 0 0 0"
   panel "set view.user.6" -w panel -p "geometry viewer.user.4!display" \
-      -xy 600,54 -wh 193,82
+      -xy 860,55 -wh 193,82
    manipulator "set view.user.6:User" -w oneshot -p "set view.user.6" \
        -xy 8,9 -wh 59,22
    manipulator "set view.user.6:Top" -w oneshot -p "set view.user.6" \
@@ -399,13 +609,26 @@ shell "ui" shell
    manipulator "set view.user.6:Persp" -w toggle -p "set view.user.6" \
        -xy 126,52 -wh 59,22
   panel "read field.user.0" -w panel -p "geometry viewer.user.4!display" \
-      -xy 535,424 -wh 256,324
+      -xy 801,139 -wh 256,324
    manipulator "read field.user.0:Read Field Browser" -w browser -p "read field.user.0" \
        -xy 10,9 -wh 236,194
    manipulator "read field.user.0:Data Conversion" -w radio_buttons -p "read field.user.0" \
        -xy 10,204 -wh 118,44
    manipulator "read field.user.0:Read Status" -w textblock -p "read field.user.0" \
        -xy 10,248 -wh 236,66
+  panel AVSGraph.user.16!DrawingWindow -w panel -p "geometry viewer.user.4!display" \
+      -xy 598,565 -wh 469,317\
+   -P title string "AVSGraph Drawing Window"
+  panel integer.user.17 -w panel -p "geometry viewer.user.4!display" \
+      -xy 23,841 -wh 256,42
+   manipulator "integer.user.17:integer value" -w typein_integer -p integer.user.17 \
+       -xy 10,10 -wh 236,22
+manipulator AVSGraph.user.16!page.5!title -w text -p AVSGraph.user.16!page.5 \
+    -xy 10,10 -wh 118,22
+manipulator AVSGraph.user.16!page.7!title -w text -p AVSGraph.user.16!page.7 \
+    -xy 10,30 -wh 118,22
+manipulator AVSGraph.user.16!page.12!title -w text -p AVSGraph.user.16!page.12 \
+    -xy 10,20 -wh 118,22
 manipulator "geometry viewer.user.4":object -w none
 manipulator "geometry viewer.user.4":"Update Always" -w none
 manipulator "geometry viewer.user.4":"Update Image" -w none

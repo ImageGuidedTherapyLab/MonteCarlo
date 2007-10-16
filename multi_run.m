@@ -20,7 +20,7 @@ dimz = 257; % grid dimensions
 dimr = 128; % grid dimensions
 
 % beam radius
-R_0 = .38 ;  % [cm]
+R_0 = .1 ;  % [cm]
 
 % set function pointer representing type of beam
 %                    diff_init : interstitial beam
