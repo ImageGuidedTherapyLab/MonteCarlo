@@ -12,30 +12,32 @@
 %R, transmitted, T, and absorbed, A. It also returns a matrix representing 
 %a grid (3mm x 1.5 mm) of the tissue on the r-z variables whose entries 
 %represent the amount of photons absorbed in that volume. Each entry 
-%represents a delta_r = .15 mm and delta_z = .05 mm. The last column of 
+%represents a DELTA_R = .15 mm and DELTA_Z = .05 mm. The last column of 
 %this matrix, however, represents all photons that went beyond the 3 mm 
 %represented by the rest of the matrix. It also returns a matrix giving 
 %the fluence in each of the elements representing the same region.The 
 %expected value for R is .225 and for T is .015.
 
-function [R,A,T,grid,fluence,heating] = scatter_simulation_g(num_photons,beam_type,R_0,g)
+function [R,A,T,grid,fluence,heating] = scatter_simulation(num_photons,R_0,g,mu_a,mu_s,P,init)
+
+% mu_a =  absorption coefficient [cm^-1]
+% mu_s =  scattering coefficient [cm^-1]
+% g    =  expected vale for cosine of angle scattering
+% P    =  total Power [W] (a 2d grid of power values)
 
 
 tic; % function that keeps track f cputime
 %initialization
 
+% DELTA_R  = distance along the r-axis each element in grid represents [cm]
+% DELTA_Z  = distance along the z-axis each element in grid represents [cm]
+% BEAM_LOC = location in z-axis of center of diffusing tip [cm]
+% DIFF_LEN = length of diffusing tip [cm]
+
+ global DELTA_R DELTA_Z BEAM_LOC DIFF_LEN 
+
 % num_photons        number of photons to be simulated
-% beam_type          number representing type of beam
-%                    1: Flat beam of radium R_0
-%                    2: Gaussian beam with 1/exp(2) radius R_0
-%                    3: Point source at the origin
 % R_0                parameter for beam type [cm]
-% PhotonsX           1st coordinate of photon position
-% PhotonsY           2nd coordinate of photon position
-% PhotonsZ           3rd coordinate of photon position
-% PhotonsCX          angle in 1st direction of photon travel
-% PhotonsCY          angle in 2nd direction of photon travel
-% PhotonsCZ          angle in 3rd direction of photon travel
 % delta_s            distance photon moves between events
 % phi                azimuthal angle
 % theta              deflection angle
@@ -43,41 +45,39 @@ tic; % function that keeps track f cputime
 % wa                 portion of photon weight that is absorbed at current 
 %                    event
 
- P = 1;           % total Power [W]
  A = 0;            % counter for photons absorbed
  R = 0;            % counter for photons reflected
  T = 0;            % counter for photons transmitted
- mu_a = .5;    % absorption coefficient [cm^-1]
- mu_s = 14.2;     % scattering coefficient [cm^-1]
  mu_t = mu_a + mu_s; % attenuation coefficient [cm^-1]
  wa_multiplier = mu_a/mu_t; % fraction mu_a/mu_t
  e = .005;         % weight cutoff for photon
  m = 20;           % constant used to determine photon cutoff 
- beam_loc = 2.5;  % location in z-axis of center of diffusing tip [cm]
- diff_len = 1;    % length of diffusing tip [cm]
- d = 5;            % depth of tissue [cm]
+ d = 10;           % depth of tissue [cm]
  n1 = 1;           % refractive index of air
  n2 = 1.37;        % refractive index of tissue
  n = n1/n2;        % ratio to calculate Snell's Law
- R_spec = 0; % specular reflection constant
+ R_spec = (n1 - n2)^2/(n1+n2)^2; % specular reflection constant
+ R_spec = 0;       % specular reflection constant
  theta_c = asin(n); % critical angle;
-% g = .9;           % expected vale for cosine of angle scattering
- dim1 = 500;       % 1st dimension of grid
- dim2 = 501;       % 2nd dimension of grid
+ dim1 = size(P,1);  % 1st dimension of grid
+ dim2 = size(P,2);  % 2nd dimension of grid
  grid = zeros(dim1,dim2); % matrix representing the absorbed photons
- delta_r = .01;    % distance along the r-axis each element in grid 
-                    % represents [cm]
- delta_z = .01;    % distance along the z-axis each element in grid 
-                    % represents [cm]
 
 
+% PhotonsX           1st coordinate of photon position
+% PhotonsY           2nd coordinate of photon position
+% PhotonsZ           3rd coordinate of photon position
+% PhotonsCX          angle in 1st direction of photon travel
+% PhotonsCY          angle in 2nd direction of photon travel
+% PhotonsCZ          angle in 3rd direction of photon travel
 
+
+% init is used as a function pointer to:
+%             diff_init   -   initialize photons for interstitial scattering
+%             initialize  -
                     
-[PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ] = diff_init(num_photons,beam_loc,diff_len);
+[PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ] = init(num_photons,BEAM_LOC,DIFF_LEN);
 
-PhotonsY = zeros(num_photons,1);
-PhotonsX = zeros(num_photons,1);
- 
 PhotonsW = ones(num_photons,1);
 
 AliveIndicies = [1:num_photons];  % Indicies of photons with weight 
@@ -97,7 +97,7 @@ while(numel(AliveIndicies) > 0)
     
     % Calculate absorption and check for weight cutoff
     [PhotonsW, A, grid] = absorption_cutoff(PhotonsX,PhotonsY,...
-        PhotonsZ,PhotonsW, A, wa_multiplier, m, e,grid,delta_r,delta_z,...
+        PhotonsZ,PhotonsW, A, wa_multiplier, m, e,grid,DELTA_R,DELTA_Z,...
         dim1,dim2);
     
     % Throw out Dead Photons
@@ -129,18 +129,11 @@ A = A/num_photons;
 [p,n] = size(grid);
 Volume = zeros(p,n); % matrix holding the volume that each element
                      % in the grid matrix represents
-Vol_mult = pi*delta_r^2*delta_z;
+Vol_mult = pi*DELTA_R^2*DELTA_Z;
 
 for i=0:n-1
     Volume(:,i+1) = (2*i+1)*Vol_mult;
 end
-
-P = ones(dim1,dim2);
-c = floor(beam_loc/delta_z)+1; %grid location of the center of the diff tip
-l = floor(.5*diff_len/delta_z); %number of grid points from center of diff tip to end
-w = floor(.4/delta_r);   %number of grid points out from laser for cooling
-
-P(c-l:c+l,1:1+w) = 0;
 
 fluence = (grid.*P)./(num_photons.*Volume*mu_a); % matrix holding the
                                                % fluence values for
