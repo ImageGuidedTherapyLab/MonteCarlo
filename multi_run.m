@@ -30,19 +30,19 @@ R_0 = .1 ;  % [cm]
 BeamType = 4;
 if(BeamType == 1)
    functer = @gauss_init ;
-   namebase = 'Gauss_%d';
+   namebase = 'Gauss_%04d';
    BEAM_LOC = 0.0;  % location in z-axis of center of diffusing tip [cm]
 elseif(BeamType == 2)
    functer = @flat_init  ;
-   namebase = 'Flat_%d';
+   namebase = 'Flat_%04d';
    BEAM_LOC = 0.0;  % location in z-axis of center of diffusing tip [cm]
 elseif(BeamType == 3)
    functer = @point_init ;
-   namebase = 'Point_%d';
+   namebase = 'Point_%04d';
    BEAM_LOC = 0.0;  % location in z-axis of center of diffusing tip [cm]
 elseif(BeamType == 4)
    functer = @diff_init  ;
-   namebase = 'Diff_%d';
+   namebase = 'Diff_%04d';
    BEAM_LOC = 1.5;  % location in z-axis of center of diffusing tip [cm]
 end
 
