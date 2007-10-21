@@ -13,11 +13,11 @@ clear all
 % set global variables
 global BEAM_LOC   DIFF_LEN   DELTA_R   DELTA_Z 
 
-DIFF_LEN = .5;    % length of diffusing tip [cm]
+DIFF_LEN = .005;    % length of diffusing tip [cm]
 DELTA_R = .0117;   %  DELTA_R  = spacing along the r-axis [cm]
 DELTA_Z = .0117;   %  DELTA_Z  = spacing along the z-axis [cm]
-dimz = 257; % grid dimensions
-dimr = 128; % grid dimensions
+dimz = 256; % grid dimensions
+dimr = 129; % grid dimensions
 
 % beam radius
 R_0 = .1 ;  % [cm]
@@ -43,7 +43,7 @@ elseif(BeamType == 3)
 elseif(BeamType == 4)
    functer = @diff_init  ;
    namebase = 'Diff_%04d';
-   BEAM_LOC = 1.5;  % location in z-axis of center of diffusing tip [cm]
+   BEAM_LOC = 0.8;  % location in z-axis of center of diffusing tip [cm]
 end
 
 
@@ -57,14 +57,51 @@ P = ones(dimz,dimr); % comment/uncomment for uniform power
 
 
 % setup for parameter study 
-mu_a = [.046,.44,.704,1.008,1.312,1.616,1.92,2.224,2.528,2.832,3.136,3.44,3.744,4.048,4.352,4.656,4.96,5.0];
-mu_s = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25];
-g = [0,.1,.2,.3,.4,.5,.6,.7,.8,.9,.99];
-dist_r = [.1,.3,.5,.7,.9];
-dist_z = [.1,.3,.5,.7,.9];
-mu_a = [.046];           % comment/uncomment for single run 
-mu_s = [14.7];           % comment/uncomment for single run
-g    = [.7];             % comment/uncomment for single run
+% from Welch ch 8 Appendix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  in-vitro 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%          lamdba     mu_t      mu_a      mu_s    mu_s(1-g)     g     mu_eff
+%           (nm)    (cm^-1)   (cm^-1)   (cm^-1)   (cm^-1)             (cm^-1)
+%          --------------------------------------------------------------------
+%###Brain###   
+% Calf      633        -       .19         -         -          -     2.5-3.4
+%           1064       -       .36         -         -          -       2.5
+%           1320       -       .84         -         -          -       4.0
+% Cat       488        -         -         -         -          -       10.9
+%           514.5      -         -         -         -          -      13.3
+%           630        -         -         -         -          -     5.3-8.9
+% Human     488        -         -         -         -          -    14.0-25.0
+%  (Adult)  514        -         -         -         -          -    14.0-16.7
+%           660        -         -         -         -          -     7.0-12.5
+%           1060       -         -         -         -          -     2.3- 3.4
+%           630        -     0.3-1.0       -      30.0-40.0     -       8.3
+%  (Neonate)488        -         -         -         -          -     5.9-7.9
+%           514        -         -         -         -          -     5.8-9.0
+%           660        -         -         -         -          -     2.5-3.3
+%           1060       -         -         -         -          -     1.1-1.4
+%  (Adult white matter)
+%          632.8       -      2.2+-.2   532+-41   91+-5     0.82+-.01  23.8+-1.4
+%          1064        -      3.2+-.4   469+-34 60.4+-2.55  0.87+-.007 24.1+-1.7
+%  (Adult grey matter)
+%          632.8       -      2.7+-.2   354+-37 20.6+-2     0.94+-.004 13.3+-0.9
+%          1064        -      5.0+-.5   134+-34 11.8+-0.9   0.90+-.007 15.7+-1.3
+% Pig
+%          633     0.26-0.64     -       52-57       -        0.945     4.3-14.2
+%
+%
+%
+dist_r = [.5];
+dist_z = [10];
+mu_a = [.046];
+mu_s = [3;14.7;21];
+g = [.7;.85;.99];
+%dist_r = [.1;.3;.5;.7;.9];
+%dist_z = [.1;.3;.5;.7;.9];
+%mu_a = [.046];           % comment/uncomment for single run 
+%mu_s = [14.7];           % comment/uncomment for single run
+%g    = [.7];             % comment/uncomment for single run
 %dist_r = [.5];           % comment/uncomment for single run
 %dist_z = [.5];           % comment/uncomment for single run
 
@@ -82,17 +119,17 @@ for iii = 1:dimz
     end
 end
 
-ntotal = size(g,2)*size(mu_a,2)*size(mu_s,2)*size(dist_r,2)*size(dist_z,2);
+ntotal = size(g,1)*size(mu_a,1)*size(mu_s,1)*size(dist_r,1)*size(dist_z,1);
 icount = 0;  
-for ig = 1:size(g,2)
-  for ia = 1:size(mu_a,2)
-    for is = 1:size(mu_s,2)
-       for ir = 1:size(dist_r,2)
-          for iz = 1:size(dist_z,2)
+for ig = 1:size(g,1)
+  for ia = 1:size(mu_a,1)
+    for is = 1:size(mu_s,1)
+       for ir = 1:size(dist_r,1)
+          for iz = 1:size(dist_z,1)
              disp(sprintf('\non grid %d of %d total grids',icount,ntotal))
              disp(sprintf('g = %f, mu_a = %f, mu_s = %f',...
                                                     g(ig),mu_a(ia),mu_s(is) ) )
-             disp(sprintf('dist_r = %f, dist_r = %f', dist_r(ir),dist_z(iz) ) )
+             disp(sprintf('dist_r = %f, dist_z = %f', dist_r(ir),dist_z(iz) ) )
              % calculate isotropic source term for comparison
              mu_tr  = (mu_a(ia) *100)+ (mu_s(is)*100) * (1-g(ig)); % 1/meters
              mu_eff = sqrt(3*(mu_a(ia)*100)*mu_tr); % 1/meters
@@ -105,7 +142,7 @@ for ig = 1:size(g,2)
                disp(sprintf('  photon set %d of %d',i,nrun))
                [R,A,T,grid,fluence,HEATING] = ...
                scatter_simulation(10000,R_0,g(ig),mu_a(ia),mu_s(is),P,...
-                                  functer,dist_r(ir),dist_r(iz));
+                                  functer,dist_r(ir),dist_z(iz));
                heating4 = heating4 + HEATING;
              end
              %monte carlo heating should be units of  [W/m^3]
