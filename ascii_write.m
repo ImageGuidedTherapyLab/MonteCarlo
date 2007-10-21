@@ -6,6 +6,8 @@
 function ascii_write(A,B, filebase,delta_r,delta_z,...
                          g,mu_a,mu_s,dist_r,dist_z);
 
+global BEAM_LOC 
+
 %  A is the matrix being written
 %  name is a base string of the file name to be written
 %  delta_r  = spacing along the r-axis [units can be anything]
@@ -17,32 +19,25 @@ fid = fopen( sprintf('%s.asc',filebase)  ,'w');
 [m,n,p,q] = size(A);
 
 
-fprintf(fid, '%d %d %d %d \n', m,n,p,q);
+% .asc files are written row major first index varies the fastest
 
-if(p == 1 && q ==1)
-  for j = 1:n
-      for i = 1:m
-          fprintf(fid, '%f ', A(i,j));
-      end
-      fprintf(fid, '\n');
-  end
+fprintf(fid, '%d %d %d %d %f %f %f\n', m,n,p,q,...
+              delta_z*.01,delta_r*.01,BEAM_LOC*.01);
+% axial direction varies over rows
+% radial direction varies over columns
+for j = 1:n
+    for i = 1:m
+        fprintf(fid, '%f ', A(i,j));
+    end
 end
 % remember params used for this file
-fprintf(fid,'# g = %f, mu_a = %f, mu_s = %f, dist_r = %f, dist_z = %f \n',...
+fprintf(fid,'\n# g = %f, mu_a = %f, mu_s = %f, dist_r = %f, dist_z = %f \n',...
                                                    g,mu_a,mu_s,dist_r,dist_z);
 
 fclose(fid);
 
-% TRANSPOSING THE MATRIX!!!!!!!!!!!!!!!!!!!!!!
+% write avs field
 fid = fopen( sprintf('%s.fld',filebase) ,'w');
-% create rectilinear coordinate buffer
-bounds = zeros(size(A,1)+size(A,2),1);
-for i=0:size(A,2)-1
-    bounds(i+1) = i*delta_r * .01; % meters
-end
-for i=0:size(A,1)-1
-    bounds(size(A,2)+i+1) = i*delta_z * .01; % meters
-end
 % write out avs file header
 fprintf(fid,'# AVS field file \n');
 % remember params used for this file
@@ -65,6 +60,8 @@ fprintf(fid,'\f\f');
 % buffer the data
 buffer = zeros(2*size(A,1)*size(A,2),1);
 icnt = 1;
+% TRANSPOSING THE MATRIX!!!!!!!!!!!!!!!!!!!!!!
+% .fld files are written column major second index varies the fastest
 for i = 1:size(A,1)
    for j = 1:size(A,2)
        buffer(icnt) = A(i,j); icnt = icnt + 1;
@@ -72,6 +69,15 @@ for i = 1:size(A,1)
    end
 end
 fwrite(fid,buffer,'single');
+% create rectilinear coordinate buffer 
+% write on the coordinates of the variable that varies the fastest first
+bounds = zeros(size(A,1)+size(A,2),1);
+for i=0:size(A,2)-1
+    bounds(i+1) = i*delta_r * .01; % meters
+end
+for i=0:size(A,1)-1
+    bounds(size(A,2)+i+1) = i*delta_z * .01; % meters
+end
 fwrite(fid,bounds,'single');
 
 fclose(fid);
