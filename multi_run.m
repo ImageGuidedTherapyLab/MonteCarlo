@@ -56,6 +56,16 @@ P = ones(dimz,dimr);
 P = ones(dimz,dimr); % comment/uncomment for uniform power
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  water
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%          lamdba     mu_t      mu_a      mu_s    mu_s(1-g)     g     mu_eff
+%           (nm)    (cm^-1)   (cm^-1)   (cm^-1)   (cm^-1)             (cm^-1)
+%          --------------------------------------------------------------------
+%###H20###   
+%           633        -       .005       <.003      -          -       -    
+%           810        -       .05        <.003      -          -       -
+%           1064       -       .50        <.003      -          -       -
 % setup for parameter study 
 % from Welch ch 8 Appendix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -97,6 +107,9 @@ P = ones(dimz,dimr); % comment/uncomment for uniform power
 %           594        -         -         -         -          -       9.1
 %           543        -         -         -         -          -      18.2
 %           1064       -      1.47+-.24  47+-13     6.43      0.862      -   
+%###Blood###   
+% Hct=.47  partially oxygenated
+%           760      2840      15.5     2820       7.9        0.9972    33.0
 %###Tumors###   
 % Brain,intracranial,Human
 %           488        -         -         -         -          -     7.1-20.0
@@ -112,6 +125,9 @@ P = ones(dimz,dimr); % comment/uncomment for uniform power
 %         514.5        -         -         -         -          -       4.8
 % fibrosarcoma,rat
 %           630        -         -         -         -          -      4.4-9.8
+%###Myocardium (specialized cardiac muscle cells)###   
+% Dog native (<=45degC) coagulated at 45 -> 74degC
+%           632.8      -     4.2+-.2       -         -       .71+-.02     -    
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  IN-VIVO 
@@ -136,26 +152,34 @@ P = ones(dimz,dimr); % comment/uncomment for uniform power
 %          789         -       0.96        -         7.86       -       -
 %###Tumors###   
 % Human retinoblastoma (athymic mice)
-%          488/514    -         -         -         -          -       6.25
-%          630        -         -         -         -          -       3.03
-%          668        -         -         -         -          -       2.8
-%          1064       -         -         -         -          -       1.3
+%          488/514     -         -         -         -          -       6.25
+%          630         -         -         -         -          -       3.03
+%          668         -         -         -         -          -       2.8
+%          1064        -         -         -         -          -       1.3
 % Mammary carcinoma (C3H/HEJ mice)
-%          488/514    -         -         -         -          -       9.1
-%          630        -         -         -         -          -       5.0
-%          668        -         -         -         -          -       4.3
-%          1064       -         -         -         -          -       2.7
+%          488/514     -         -         -         -          -       9.1
+%          630         -         -         -         -          -       5.0
+%          668         -         -         -         -          -       4.3
+%          1064        -         -         -         -          -       2.7
 % B16 melanotic melanoma (C57/B16)
-%          630        -         -         -         -          -      20.0
-%          668        -         -         -         -          -      20.0
-%          1064       -         -         -         -          -       5.0
+%          630         -         -         -         -          -      20.0
+%          668         -         -         -         -          -      20.0
+%          1064        -         -         -         -          -       5.0
 %
 %
-dist_r = [.5];
-dist_z = [10];
-mu_a = [.046];
-mu_s = [3;14.7;21];
-g = [.7;.85;.99];
+dist_r = [.5];   % distribute uniformly in circular radius
+dist_z = [10];   % concentrate at zero
+mu_a = [.04;...  %canine prostate in-vitro (also close to water)
+        .36;...  %calf brain  in-vitro
+        1.23;... % human prostate
+        15.5 ];  %blood
+mu_s = [3;...      % agar (as a guess ~ water *100)
+        47.0;...   % human prostate in-vitro
+        435.0;...  % brain adult white matter 
+        2820];     % blood
+g    = [.71;...    % myocardium
+        .862;...   % human prostate in-vitro
+        .97];      % prostate rat tumor
 %dist_r = [.1;.3;.5;.7;.9];
 %dist_z = [.1;.3;.5;.7;.9];
 %mu_a = [.046];           % comment/uncomment for single run 
@@ -166,7 +190,6 @@ g = [.7;.85;.99];
 
 % set number of times to run
 nrun = 10 ;
-
 
 % Create distance grid for isotropic comparison
 dist = zeros(dimz,dimr-1);
