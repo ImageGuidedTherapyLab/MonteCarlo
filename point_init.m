@@ -15,5 +15,12 @@ PhotonsZ = zeros(num_photons,1);
 PhotonsCX = zeros(num_photons,1);
 PhotonsCY = zeros(num_photons,1);
 PhotonsCZ = ones(num_photons,1);
+
+PhotonsCZ = cos((rand(num_photons,1))*pi);
+
+PhotonsCY = rand(num_photons,1).*sqrt(1-PhotonsCZ.^2);
+
+PhotonsCX = sqrt(1-PhotonsCZ.^2 - PhotonsCY.^2);
+
 R_spec = (n1 - n2)^2/(n1+n2)^2; % specular reflection constant
 
