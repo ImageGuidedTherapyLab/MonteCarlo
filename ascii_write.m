@@ -21,8 +21,8 @@ fid = fopen( sprintf('%s.asc',filebase)  ,'w');
 
 % .asc files are written row major first index varies the fastest
 
-fprintf(fid, '%d %d %d %d %f %f %f\n', m,n,p,q,...
-              delta_z*.01,delta_r*.01,BEAM_LOC*.01);
+fprintf(fid, '%d %d %d %d %f %f %f %f %f %f\n', m,n,p,q,...
+              delta_z*.01,delta_r*.01,BEAM_LOC*.01,g,100*mu_a,100*mu_s );
 % axial direction varies over rows
 % radial direction varies over columns
 for j = 1:n
