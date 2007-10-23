@@ -216,7 +216,7 @@ for is = 1:size(mu_s,1)
            mu_tr  = (mu_a(ia) *100)+ (mu_s(is)*100) * (1-g(ig)); % 1/meters
            mu_eff = sqrt(3*(mu_a(ia)*100)*mu_tr); % 1/meters
            %isotropic should be units of  [W/m^3]
-           isotropic = 3/4*(mu_a(ia)*100)*mu_tr*pi*...
+           isotropic = 3/4*(mu_a(ia)*100)*mu_tr/pi*...
                            (P(:,1:dimr-1).*exp(-mu_eff*dist)).* dist.^-1;
            %initialize monte carlo grid
            heating4 = zeros(dimz,dimr-1);
