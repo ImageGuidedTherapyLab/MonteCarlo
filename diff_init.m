@@ -15,10 +15,16 @@ PhotonsY = PhotonsR.*sin(PhotonsTheta);
 PhotonsZ = diff_len*rand(num_photons,1).^dist_z + (beam_loc - .5*diff_len)...
       *ones(num_photons,1);
 
+PhotonsCZ = cos((rand(num_photons,1))*pi);
 
-PhotonsCX = zeros(num_photons,1);
-PhotonsCY = zeros(num_photons,1);
-PhotonsCZ = ones(num_photons,1);
+PhotonsCY = rand(num_photons,1).*sqrt(1-PhotonsCZ.^2);
+
+PhotonsCX = sqrt(1-PhotonsCZ.^2 - PhotonsCY.^2);
+
+
+%PhotonsCX = zeros(num_photons,1);
+%PhotonsCY = zeros(num_photons,1);
+%PhotonsCZ = ones(num_photons,1);
 
 R_spec = 0;       % specular reflection constant
 
