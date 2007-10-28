@@ -9,12 +9,18 @@ function [PhotonsX,PhotonsY,PhotonsZ,PhotonsCX,PhotonsCY,PhotonsCZ,R_spec] = fla
 
 
 disp('  initializing flat beam');
-PhotonsX = R_0*sqrt(rand(num_photons,1));
-PhotonsY = zeros(num_photons,1);
-PhotonsZ = zeros(num_photons,1);
+
+PhotonsR     = R_0*rand(num_photons,1).^dist_r;
+PhotonsTheta = 2*pi*rand(num_photons,1);
+PhotonsX = PhotonsR.*cos(PhotonsTheta);
+PhotonsY = PhotonsR.*sin(PhotonsTheta);
+PhotonsZ = diff_len*rand(num_photons,1).^dist_z + (beam_loc - .5*diff_len)...
+      *ones(num_photons,1);
+
 
 PhotonsCX = zeros(num_photons,1);
 PhotonsCY = zeros(num_photons,1);
 PhotonsCZ = ones(num_photons,1);
+
 R_spec = (n1 - n2)^2/(n1+n2)^2; % specular reflection constant
 

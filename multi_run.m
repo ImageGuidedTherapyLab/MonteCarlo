@@ -13,14 +13,14 @@ clear all
 % set global variables
 global BEAM_LOC   DIFF_LEN   DELTA_R   DELTA_Z 
 
-DIFF_LEN = .005;    % length of diffusing tip [cm]
+DIFF_LEN = 0.5;    % length of diffusing tip [cm]
 DELTA_R = .0117;   %  DELTA_R  = spacing along the r-axis [cm]
 DELTA_Z = .0117;   %  DELTA_Z  = spacing along the z-axis [cm]
 dimz = 256; % grid dimensions
 dimr = 129; % grid dimensions
 
 % beam radius
-R_0 = .1 ;  % [cm]
+R_0 = 0.1;  % [cm]
 
 % set function pointer representing type of beam
 %                    diff_init : interstitial beam
@@ -167,8 +167,8 @@ P = ones(dimz,dimr); % comment/uncomment for uniform power
 %          1064        -         -         -         -          -       5.0
 %
 %
-dist_r = [.5];   % distribute uniformly in circular radius
-dist_z = [10];   % concentrate at zero
+dist_r = [0.5];  % distribute uniformly in circular radius
+dist_z = [1.0];   % uniformly distribute over length of laser tip
 % mu_a arranged so that the fastest runs are done first...
 mu_a = [ 15.5 ;... %blood
         1.23;... % human prostate
@@ -198,7 +198,7 @@ for iii = 1:dimz
     for jjj = 1:dimr-1
       % should be units of meters
       dist(iii,jjj) = .01* sqrt(  (            (jjj-.5)*DELTA_R ) ^ 2 ...
-                                + ( BEAM_LOC - (iii-.5)*DELTA_Z ) ^ 2     ) ;
+                   + ( BEAM_LOC + DIFF_LEN/2 - (iii-.5)*DELTA_Z ) ^ 2     ) ;
     end
 end
 
