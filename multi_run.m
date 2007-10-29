@@ -198,7 +198,7 @@ for iii = 1:dimz
     for jjj = 1:dimr-1
       % should be units of meters
       dist(iii,jjj) = .01* sqrt(  (            (jjj-.5)*DELTA_R ) ^ 2 ...
-                   + ( BEAM_LOC + DIFF_LEN/2 - (iii-.5)*DELTA_Z ) ^ 2     ) ;
+                               + ( BEAM_LOC  - (iii-.5)*DELTA_Z ) ^ 2     ) ;
     end
 end
 

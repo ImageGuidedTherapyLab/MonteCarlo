@@ -73,8 +73,7 @@ PhotonsCZ = PhotonsCZ.* magnitude.^-1 ;
 %PhotonsCY = ones(num_photons,1);
 %PhotonsCZ = zeros(num_photons,1);
 
-%PhotonsZ = PhotonsZ + (beam_loc - .5*diff_len)*ones(num_photons,1);
-PhotonsZ = PhotonsZ + beam_loc*ones(num_photons,1);
+PhotonsZ = PhotonsZ + (beam_loc - .5*diff_len)*ones(num_photons,1);
 
 
 
