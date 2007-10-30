@@ -169,15 +169,15 @@ P = ones(dimz,dimr); % comment/uncomment for uniform power
 %
 dist_r = [0.5];  % distribute uniformly in circular radius
 dist_z = [1.0];   % uniformly distribute over length of laser tip
+mu_s = [3;...      % agar (as a guess ~ water *100)
+        47.0;...   % human prostate in-vitro
+        435.0] %;...  % brain adult white matter 
+       % 2820];     % blood
 % mu_a arranged so that the fastest runs are done first...
 mu_a = [ 15.5 ;... %blood
         1.23;... % human prostate
         .36;...  %calf brain  in-vitro
         .04 ]; %canine prostate in-vitro (also close to water)
-mu_s = [3;...      % agar (as a guess ~ water *100)
-        47.0;...   % human prostate in-vitro
-        435.0;...  % brain adult white matter 
-        2820];     % blood
 g    = [.71;...    % myocardium
         .862;...   % human prostate in-vitro
         .97];      % prostate rat tumor
