@@ -13,14 +13,14 @@ clear all
 % set global variables
 global BEAM_LOC   DIFF_LEN   DELTA_R   DELTA_Z 
 
-DIFF_LEN = 0.5;    % length of diffusing tip [cm]
+DIFF_LEN = 1.0;    % length of diffusing tip [cm]
 DELTA_R = .0117;   %  DELTA_R  = spacing along the r-axis [cm]
 DELTA_Z = .0117;   %  DELTA_Z  = spacing along the z-axis [cm]
 dimz = 256; % grid dimensions
 dimr = 129; % grid dimensions
 
 % beam radius
-R_0 = 0.1;  % [cm]
+R_0 = 0.2;  % [cm]
 
 % set function pointer representing type of beam
 %                    diff_init : interstitial beam
