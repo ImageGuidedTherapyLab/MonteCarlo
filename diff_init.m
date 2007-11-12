@@ -11,71 +11,39 @@ global DELTA_R DELTA_Z
 
 disp('  initializing interstitial laser');
 
-% create a list of all possible positions with the boundaries of the limacon
-Naxl=floor(diff_len/DELTA_Z);
-Nrad=floor(diff_len/DELTA_R);
-options = optimset('fsolve');
-options = optimset(options,'MaxFunEvals',1000);
-xguess = [1  1/sqrt(2) 0;1 1 0; 0 0 1] \ [R_0;diff_len;pi/4];
-[x,f,exit] = fsolve(@(x) limacon(x,R_0,diff_len),xguess,options);
-a = x(1);
-b = x(2);
-thetamax = x(3);
-%Nrad = floor(log(1-diff_len/(DELTA_R*(dist_r-1))*(1-dist_r))/log(dist_r) - 1)
-%radlist = diff_len*ones(Nrad+1,1);
-%for i = 0:Nrad
-%  for j = i+1:Nrad+1
-%    radlist(j) = radlist(j) - dist_r^i* (DELTA_R*(dist_r-1));
-%  end
-%end
-radlist = diff_len*[1/Nrad/2:1/Nrad:1];
-axllist = diff_len*([   -1  :1/Naxl:1].^dist_z);
-
-
-poslist=[];
-for i = 1:size(radlist,2)
-   for j = 1: size(axllist,2)
-       r= radlist(i) ;
-       z= axllist(j) ;
-       rad = sqrt(z^2 + r^ 2);
-       theta = atan2(r,z);
-       limaconrad = a + b * cos(theta);
-       if(rad <= limaconrad)
-          poslist=[poslist;r,z];
-       end
-   end
-end
-
 RandPos = ceil(size(poslist,1).*rand(num_photons,1).^dist_r);
 
 PhotonsTheta = 2*pi*rand(num_photons,1);
+% uniformly distribute energy along radius i.e.
+% see Welch section 4.5.1 equation (4.58)
+% Assume independent random variable for the radial and axial photon
+% distribution. the photon radial position is uniformly distributed over
+% the area i.e.
+% 
+%   int(p(r),r,0,R_0) = int( 2*pi*r /pi/R_0^2* ,r,0,R_0)
+% 
+%   the probability that a photon with within [0,r] is equal to the 
+%   probability that a uniform random variable is between [0,\xsi] (\xsi < 1)
+% 
+%   \eta = int(1,\eta,0,\eta)= int( 2*pi*r /pi/R_0^2* ,r,0,r) = r^2/R_0^2
+%   r = R_0 * sqrt(\eta) 
+% 
+PhotonsRad   = R_0 *rand(num_photons,1).^.5;
 
-PhotonsX = poslist(RandPos,1).*cos(PhotonsTheta);
-PhotonsY = poslist(RandPos,1).*sin(PhotonsTheta);
-PhotonsZ = poslist(RandPos,2);
-
-%PhotonsX = zeros(num_photons,1);
-%PhotonsY = CardioidY;
-%%PhotonsY = R_0*rand(num_photons,1).^dist_r;
-%PhotonsZ = -CardioidX;
+PhotonsX = PhotonsRad.*cos(PhotonsTheta);
+PhotonsY = PhotonsRad.*sin(PhotonsTheta);
+PhotonsZ = diff_len*rand(num_photons,1)
 
 PhotonsCX = PhotonsX;
 PhotonsCY = PhotonsY;
 PhotonsCZ = PhotonsZ;
-
 
 magnitude = (PhotonsCX.^2 + PhotonsCY.^2  + PhotonsCZ.^2).^.5;
 PhotonsCX = PhotonsCX.* magnitude.^-1 ;    
 PhotonsCY = PhotonsCY.* magnitude.^-1 ;
 PhotonsCZ = PhotonsCZ.* magnitude.^-1 ;
 
-%PhotonsCX = ones(num_photons,1);
-%PhotonsCY = ones(num_photons,1);
-%PhotonsCZ = zeros(num_photons,1);
-
 PhotonsZ = PhotonsZ + (beam_loc - .5*diff_len)*ones(num_photons,1);
-
-
 
 R_spec = 0;       % specular reflection constant
 
