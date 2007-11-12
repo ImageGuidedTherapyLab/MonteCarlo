@@ -11,7 +11,6 @@ global DELTA_R DELTA_Z
 
 disp('  initializing interstitial laser');
 
-RandPos = ceil(size(poslist,1).*rand(num_photons,1).^dist_r);
 
 PhotonsTheta = 2*pi*rand(num_photons,1);
 % uniformly distribute energy along radius i.e.
@@ -32,7 +31,7 @@ PhotonsRad   = R_0 *rand(num_photons,1).^.5;
 
 PhotonsX = PhotonsRad.*cos(PhotonsTheta);
 PhotonsY = PhotonsRad.*sin(PhotonsTheta);
-PhotonsZ = diff_len*rand(num_photons,1)
+PhotonsZ = diff_len*rand(num_photons,1);
 
 PhotonsCX = PhotonsX;
 PhotonsCY = PhotonsY;
