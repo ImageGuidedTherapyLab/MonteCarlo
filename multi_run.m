@@ -13,14 +13,14 @@ clear all
 % set global variables
 global BEAM_LOC   DIFF_LEN   DELTA_R   DELTA_Z 
 
-DIFF_LEN = 0.5;    % length of diffusing tip [cm]
-DELTA_R = .0117;   %  DELTA_R  = spacing along the r-axis [cm]
-DELTA_Z = .0117;   %  DELTA_Z  = spacing along the z-axis [cm]
+DIFF_LEN = 1.0;    % length of diffusing tip [cm]
+DELTA_R = .0035;   %  DELTA_R  = spacing along the r-axis [cm]
+DELTA_Z = .01;   %  DELTA_Z  = spacing along the z-axis [cm]
 dimz = 256; % grid dimensions
 dimr = 129; % grid dimensions
 
 % beam radius
-R_0 = 0.05;  % [cm]
+R_0 = 0.035;  % [cm]
 
 % set function pointer representing type of beam
 %                    diff_init : interstitial beam
@@ -178,12 +178,11 @@ dist_z = [1.0];   % uniformly distribute over length of laser tip
 mu_s = [3;...      % agar (as a guess ~ water *100)
         47.0;...   % human prostate in-vitro
         435.0] ;% ...  % brain adult white matter 
-       % 2820];     % blood
 % mu_a arranged so that the fastest runs are done first...
-mu_a = [ 15.5 ;... %blood
-        1.23;... % human prostate
-        .36;...  %calf brain  in-vitro
-        .04 ]; %canine prostate in-vitro (also close to water)
+%    mu_a < 1.0 cm^-1 will not produce much heating
+mu_a = [ 15.5 ;...   %blood
+          5.0 ;...   % human brain (Adult grey matter)
+          1.23 ] ;   % human prostate (???agar ~ 2*water???)
 g    = [.71;...    % myocardium
         .862;...   % human prostate in-vitro
         .97];      % prostate rat tumor
