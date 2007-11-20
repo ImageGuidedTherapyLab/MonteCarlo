@@ -1,0 +1,26 @@
+
+this is the best approximation of the visualase that can come up
+w/.
+
+
+the length and radius of the tip are measured physical values.
+
+
+the scattering and absorbtion coefficients for all grids
+cover the range of  values within Welch's book.
+
+the data base for the python script should be
+   # setup monte carlo 
+   # the database* lists mimic the ordering of the matlab code used 
+   # to generate MC grids
+
+
+databasemu_s   = [3,         % agar (as a guess ~ water *100)
+                  47.0,      % human prostate in-vitro
+                  435.0]     %  brain adult white matter 
+databasemu_a   = [ 15.5 ,    %blood
+                    5.0 ,    % human brain (Adult grey matter)
+                    1.23 ]   % human prostate (???agar ~ 2*water???)
+databaseanfact = [.71,       % myocardium
+                  .862,      % human prostate in-vitro
+                  .97]       % prostate rat tumor
